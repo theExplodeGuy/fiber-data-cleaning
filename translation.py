@@ -7,6 +7,13 @@ custom_mapping = {
     # Add more mappings as needed
 }
 
+def clean(text):
+    punctuation=["/", ".", ",", "*", "(", ")", "&", "#", "@", "!"]
+    text=text.strip()
+    for punc in punctuation:
+        text=text.replace(punc, "")
+    return text
+
 def translate(text):
     # Perform the initial transliteration using unidecode
     transliterated_text = unidecode(text.lower())
