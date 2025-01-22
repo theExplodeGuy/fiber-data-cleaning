@@ -8,3 +8,4 @@ print(unique_values[0])
 print(count)
 
 print(translation.translate("Charilaou Miχael"))
+efjewlk

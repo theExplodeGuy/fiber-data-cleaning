@@ -1,6 +1,5 @@
 from unidecode import unidecode
 
-
 custom_mapping = {
     'χ': 'ch',  # Replace "kh" with "ch"
     'Θ': 'Th',  # Add custom mappings as needed
