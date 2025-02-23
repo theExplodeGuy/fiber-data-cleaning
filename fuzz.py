@@ -1,7 +1,8 @@
 import re
 from thefuzz import fuzz
+from translation import translate_clean
 
-def custom_score(s1, s2, num_weight=2, text_weight=1):
+def custom_score(s1, s2, num_weight=1.5, text_weight=1):
     # If the strings are exactly identical, return 100 immediately.
     if s1 == s2:
         return 100
@@ -32,3 +33,6 @@ def custom_score(s1, s2, num_weight=2, text_weight=1):
     # Combine the scores using a weighted average.
     combined_score = (num_weight * num_score + text_weight * text_score) / (num_weight + text_weight)
     return combined_score
+
+print(custom_score(translate_clean("9 ALKINOOU,  GERMASOGEIA"), translate_clean("9 ATTIKIS,  GERMASOGEIA")))
+print(custom_score(translate_clean("LAPITHOU 1, GERMASOGEIA"), translate_clean("VΚω Αρ. 1, Γερμασόγεια")))
