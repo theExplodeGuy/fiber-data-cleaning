@@ -11,7 +11,7 @@ custom_mapping = {
 
 # Function to clean the text
 def clean(text):
-    punctuation = ["Αρ.", "/", ".", ",", "*", "(", ")", "&", "#", "@", "!"]
+    punctuation = ["αρ.", "μπλοκ", "block" "/", ".", ",", "*", "(", ")", "&", "#", "@", "!"]
     text = text.strip()
     for punc in punctuation:
         text = text.replace(punc, "")
@@ -20,9 +20,9 @@ def clean(text):
 
 # Function to translate and clean the text
 def translate_clean(text):
-    transliterated_text = clean(text)
     # Perform the initial transliteration using unidecode
-    transliterated_text = unidecode(transliterated_text.lower())
+    transliterated_text = unidecode(text.lower())
+    transliterated_text = clean(transliterated_text)
     
     # Apply custom mappings
     for greek_char, custom_value in custom_mapping.items():
