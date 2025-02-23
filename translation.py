@@ -3,8 +3,8 @@ import re
 
 custom_mapping = {
     'χ': 'ch',  # Replace "kh" with "ch"
-    'Θ': 'Th',  # Add custom mappings as needed
-    'φ': 'Ph',
+    'Θ': 'th',  # Add custom mappings as needed
+    'φ': 'ph',
     # Add more mappings as needed
 }
 
