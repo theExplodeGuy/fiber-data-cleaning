@@ -32,8 +32,3 @@ def custom_score(s1, s2, num_weight=2, text_weight=1):
     # Combine the scores using a weighted average.
     combined_score = (num_weight * num_score + text_weight * text_score) / (num_weight + text_weight)
     return combined_score
-
-# Examples:
-print(custom_score("ayiou yeorgiou 6", "agiou georgiou 6"))  # Numeric parts match, text differs
-print(custom_score("ayiou georgiou 16", "ayiou georgiou 17"))  # Text matches, numeric parts differ
-print(custom_score("test 123", "test 123"))                  # Identical strings → 100
