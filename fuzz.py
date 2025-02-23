@@ -1,7 +1,7 @@
 import re
 from thefuzz import fuzz
 
-
+# Function to calculate a custom similarity score
 def custom_score(s1, s2, num_weight=1.5, text_weight=1):
     # If the strings are exactly identical, return 100 immediately.
     if s1 == s2:
@@ -24,10 +24,7 @@ def custom_score(s1, s2, num_weight=1.5, text_weight=1):
         num2 = " ".join(nums2)
         num_score = fuzz.token_sort_ratio(num1, num2)
     else:
-        # If one or both strings lack numbers, you might choose to:
-        # (a) Rely solely on text similarity, or 
-        # (b) Consider the numeric similarity as 0.
-        # Here, we assume a numeric similarity of 0.
+        # If one or both strings lack numbers, consider the numeric similarity as 0.
         num_score = 0
 
     # Combine the scores using a weighted average.
