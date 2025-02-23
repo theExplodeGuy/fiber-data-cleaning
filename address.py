@@ -1,33 +1,7 @@
 import pandas as pd
 from collections import Counter
 from unidecode import unidecode
-
-# Custom mapping for transliteration
-custom_mapping = {
-    'χ': 'ch',  # Replace "kh" with "ch"
-    'Θ': 'Th',  # Add custom mappings as needed
-    'φ': 'Ph',
-    # Add more mappings as needed
-}
-
-# Function to clean the text
-def clean(text):
-    punctuation = ["/", ".", ",", "*", "(", ")", "&", "#", "@", "!"]
-    text = text.strip()
-    for punc in punctuation:
-        text = text.replace(punc, "")
-    return text
-
-# Function to translate the text
-def translate(text):
-    # Perform the initial transliteration using unidecode
-    transliterated_text = unidecode(text.lower())
-    
-    # Apply custom mappings
-    for greek_char, custom_value in custom_mapping.items():
-        transliterated_text = transliterated_text.replace(unidecode(greek_char), custom_value)
-    
-    return transliterated_text
+from translation import translate_clean
 
 # Read the excel file
 try:
@@ -42,10 +16,10 @@ if not all(col in df.columns for col in ['tk', 'address', 'aprt_no']):
     exit()
 
 # Clean and translate the 'address' column
-df['translated_address'] = df['address'].apply(clean).apply(translate)
+df['translated_address'] = df['address'].apply(translate_clean)
 
-# Group by 'tk' and collect the 'translated_address' and 'aprt_no' combinations
-grouped = df.groupby('tk')[['translated_address', 'aprt_no']].apply(lambda x: x.values.tolist()).reset_index()
+# Group by 'tk' and collect the 'address', 'translated_address', and 'aprt_no' combinations
+grouped = df.groupby('tk')[['address', 'translated_address', 'aprt_no']].apply(lambda x: x.values.tolist()).reset_index(name='pairs')
 
 # Create a list to store the results
 results = []
@@ -53,29 +27,49 @@ results = []
 # Iterate over the grouped DataFrame
 for index, row in grouped.iterrows():
     tk = row['tk']
-    address_aprt_pairs = row[1]  # List of [translated_address, aprt_no] pairs for the tk group
+    address_aprt_pairs = row['pairs']  # List of [address, translated_address, aprt_no] pairs for the tk group
     
     # Count the occurrences of each [translated_address, aprt_no] pair
-    pair_counts = Counter(tuple(pair) for pair in address_aprt_pairs)
+    pair_counts = Counter((pair[1], pair[2]) for pair in address_aprt_pairs)  # Use translated_address and aprt_no for counting
     
     # Filter out pairs that occur more than once (duplicates)
     duplicates = {pair: count for pair, count in pair_counts.items() if count > 1}
     
     # Append the results to the list
     if duplicates:
+        # Create a dictionary to store duplicate details
+        duplicate_details = {}
+        for pair, count in duplicates.items():
+            translated_address, aprt_no = pair
+            # Find all original addresses that match the duplicate pair
+            original_addresses = [p[0] for p in address_aprt_pairs if (p[1], p[2]) == pair]
+            duplicate_details[pair] = {
+                'count': count,
+                'original_addresses': original_addresses
+            }
+        
         results.append({
             'tk': tk,
-            'duplicates': duplicates
+            'duplicates': duplicate_details
         })
 
 # Print the results
+c = 0
 for result in results:
     tk = result['tk']
     duplicates = result['duplicates']
     
     print(f"tk: {tk}")
-    print("Duplicates found (translated_address, aprt_no):")
-    for pair, count in duplicates.items():
+    print("Duplicates found:")
+    for pair, details in duplicates.items():
         translated_address, aprt_no = pair
+        count = details['count']
+        original_addresses = details['original_addresses']
+        c += count-1
+
         print(f"  Translated Address: {translated_address}, aprt_no: {aprt_no} - Count: {count}")
+        print("  Original Addresses:")
+        for address in original_addresses:
+            print(f"    - {address}")
     print("-" * 50)  # Separator for readability
+print("total duol: ", c)
