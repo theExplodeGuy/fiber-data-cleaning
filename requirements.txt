@@ -1,3 +1,4 @@
 pandas
 unidecode
 re
+thefuzz
