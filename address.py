@@ -10,7 +10,6 @@ custom_mapping = {
     # Add more mappings as needed
 }
 
-<<<<<<< HEAD
 # Function to clean the text
 def clean(text):
     punctuation = ["/", ".", ",", "*", "(", ")", "&", "#", "@", "!"]
@@ -80,7 +79,3 @@ for result in results:
         translated_address, aprt_no = pair
         print(f"  Translated Address: {translated_address}, aprt_no: {aprt_no} - Count: {count}")
     print("-" * 50)  # Separator for readability
-=======
-
-print(translation.translate_clean("Χαριλαου Μιχαηλ Αρ. 6"))
->>>>>>> fiber-data-cleaning/HEAD
